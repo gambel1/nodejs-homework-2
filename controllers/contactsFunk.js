@@ -12,8 +12,11 @@ const getAll = async (req, res, next) => {
 
 const getById = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const result = await Contact.findOne({ _id: id });
+    const { contactId } = req.params;
+    console.log(req.params.contactId);
+    console.log(req.params.id);
+    const result = await Contact.findById(contactId);
+
     if (!result) {
       const error = new Error("Not found");
       error.status = 404;
@@ -34,36 +37,52 @@ const add = async (req, res, next) => {
   }
 };
 
-// const updateById = async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-//     const result = await contacts.updateContact(id, req.body);
-//     if (!result) {
-//       throw HttpError(404, "Not found");
-//     }
-//     res.json(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+const updateById = async (req, res, next) => {
+  try {
+    const { contactId } = req.params;
+    const result = await Contact.findByIdAndUpdate(contactId, req.body, { new: true });
+    if (!result) {
+      throw HttpError(404, "Not found");
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
-// const deleteById = async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-//     const result = await contacts.removeContact(id);
-//     if (!result) {
-//       throw HttpError(404, "Not found");
-//     }
-//     res.json({ message: "contact deleted" });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+const updateStatusContact = async (req, res, next) => {
+  try {
+    const { contactId } = req.params;
+    const result = await Contact.findByIdAndUpdate(contactId, req.body, {
+      new: true,
+    });
+    if (!result) {
+      throw HttpError(404, "Not found");
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteById = async (req, res, next) => {
+  try {
+    const { contactId } = req.params;
+    const result = await Contact.findByIdAndDelete(contactId);
+    if (!result) {
+      throw HttpError(404, "Not found");
+    }
+    res.json({ message: "contact deleted" });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   getAll,
   getById,
   add,
-  // updateById,
-  // deleteById,
+  updateById,
+  updateStatusContact,
+  deleteById,
 };

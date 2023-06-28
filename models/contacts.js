@@ -29,11 +29,15 @@ const addSchema = Joi.object({
   phone: Joi.number().required(),
   favorite: Joi.boolean(),
 });
-const schemas = { addSchema };
+
+const updateFavoriteSchema = Joi.object({
+  favorite: Joi.boolean().required(),
+});
+
+const schemas = { addSchema, updateFavoriteSchema };
 
 contactSchema.post("save", handleMongooseError);
 
 const Contact = model("contact", contactSchema);
 
-module.exports = {Contact, schemas};
-
+module.exports = { Contact, schemas };
