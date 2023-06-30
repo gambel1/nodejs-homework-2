@@ -9,11 +9,11 @@ const {
 } = require("../../controllers");
 
 const {
-  validatePutBody,
+  isValidId,
   validatePostBody,
+  validatePutBody,
   validateFavorite,
-} = require("../../middlewares/validateBody");
-const isValidId = require("../../middlewares/isValidId");
+} = require("../../middlewares");
 
 const router = express.Router();
 
