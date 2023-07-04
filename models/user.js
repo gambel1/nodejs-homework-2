@@ -3,20 +3,21 @@ const Joi = require("joi");
 
 const { handleMongooseError } = require("../helpers");
 
-const emailRegexp = /^(?:\d{3}|\(\d{3}\))([-/.])\d{3}\1\d{4}$/;
+const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const userSchema = new Schema(
   {
-    password: {
-      type: String,
-      required: [true, "Password is required"],
-    },
     email: {
       type: String,
       match: emailRegexp,
       required: [true, "Email is required"],
       unique: true,
     },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+    },
+
     subscription: {
       type: String,
       enum: ["starter", "pro", "business"],
