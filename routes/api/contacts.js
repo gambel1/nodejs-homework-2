@@ -13,20 +13,22 @@ const {
   validatePostBody,
   validatePutBody,
   validateFavorite,
+  authenticate,
 } = require("../../middlewares");
 
 const router = express.Router();
 
 const { schemas } = require("../../models/contacts");
 
-router.get("/", getAll);
+router.get("/", authenticate, getAll);
 
-router.get("/:contactId", isValidId, getById);
+router.get("/:contactId", authenticate, isValidId, getById);
 
-router.post("/", validatePostBody(schemas.addSchema), add);
+router.post("/", authenticate, validatePostBody(schemas.addSchema), add);
 
 router.put(
   "/:contactId",
+  authenticate,
   isValidId,
   validatePutBody(schemas.addSchema),
   updateById
@@ -34,11 +36,12 @@ router.put(
 
 router.patch(
   "/:contactId/favorite",
+  authenticate,
   isValidId,
   validateFavorite(schemas.updateFavoriteSchema),
   updateStatusContact
 );
 
-router.delete("/:contactId", isValidId, deleteById);
+router.delete("/:contactId", authenticate, isValidId, deleteById);
 
 module.exports = router;
