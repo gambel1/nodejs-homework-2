@@ -40,8 +40,8 @@ const loginSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
-const schemas = { registerSchema, loginSchema };
+const modelUserSchemas = { registerSchema, loginSchema };
 
 const User = model("user", userSchema);
 
-module.exports = { User, schemas };
+module.exports = { User, modelUserSchemas };

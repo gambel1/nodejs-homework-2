@@ -38,10 +38,10 @@ const updateFavoriteSchema = Joi.object({
   favorite: Joi.boolean().required(),
 });
 
-const schemas = { addSchema, updateFavoriteSchema };
+const modelContactSchemas = { addSchema, updateFavoriteSchema };
 
 contactSchema.post("save", handleMongooseError);
 
 const Contact = model("contact", contactSchema);
 
-module.exports = { Contact, schemas };
+module.exports = { Contact, modelContactSchemas };

@@ -18,19 +18,19 @@ const {
 
 const router = express.Router();
 
-const { schemas } = require("../../models/contacts");
+const { modelContactSchemas } = require("../../models");
 
 router.get("/", authenticate, getAll);
 
 router.get("/:contactId", authenticate, isValidId, getById);
 
-router.post("/", authenticate, validatePostBody(schemas.addSchema), add);
+router.post("/", authenticate, validatePostBody(modelContactSchemas.addSchema), add);
 
 router.put(
   "/:contactId",
   authenticate,
   isValidId,
-  validatePutBody(schemas.addSchema),
+  validatePutBody(modelContactSchemas.addSchema),
   updateById
 );
 
@@ -38,7 +38,7 @@ router.patch(
   "/:contactId/favorite",
   authenticate,
   isValidId,
-  validateFavorite(schemas.updateFavoriteSchema),
+  validateFavorite(modelContactSchemas.updateFavoriteSchema),
   updateStatusContact
 );
 
