@@ -1,12 +1,9 @@
-// const { Contact } = require("./contacts");
-// const { contactSchemas } = require("./contacts");
+const { Contact, modelContactSchemas } = require("./contacts");
+const { User, modelUserSchemas } = require("./user");
 
-// const { User } = require("./user");
-// const { userSchemas } = require("./user");
-
-// module.exports = {
-//   Contact,
-//   contactSchemas,
-//   User,
-//   userSchemas,
-// };
+module.exports = {
+  Contact,
+  modelContactSchemas,
+  User,
+  modelUserSchemas,
+};

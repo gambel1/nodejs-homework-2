@@ -73,4 +73,9 @@ const logout = async (req, res) => {
   });
 };
 
-module.exports = { register, login, getCurrent, logout };
+module.exports = {
+  register,
+  login,
+  getCurrent,
+  logout
+};
