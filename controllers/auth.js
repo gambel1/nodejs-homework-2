@@ -1,8 +1,10 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
+const jimp = require("jimp");
 const path = require("path");
 const fs = require("fs/promises");
+const { HttpError } = require("../helpers");
 const { SECRET_KEY } = process.env;
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
@@ -86,11 +88,19 @@ const logout = async (req, res) => {
 const updateAvatar = async (req, res, next) => {
   try {
     const { _id } = req.user;
-    const { path: tempUpload, originalName } = req.file;
-    const resultUpload = path.join(avatarsDir, originalName);
+    const { path: tempUpload, originalname } = req.file;
+    const fileName = `${_id}_${originalname}`;
+    const resultUpload = path.join(avatarsDir, fileName);
     await fs.rename(tempUpload, resultUpload);
-    const avatarURL = path.join("avatars", originalName);
+    const avatarURL = path.join("avatars", fileName);
     await User.findByIdAndUpdate(_id, { avatarURL });
+
+    jimp
+      .read(tempUpload)
+      .then((image) => {
+        image.resize(250, 250, jimp.RESIZE_BEZIER).write(resultUpload);
+      })
+      .catch((error) => console.log(error));
 
     res.json({ avatarURL });
   } catch (error) {
