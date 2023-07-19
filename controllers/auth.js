@@ -23,18 +23,18 @@ const register = async (req, res) => {
 
     const hashPassword = await bcrypt.hash(password, 10);
     const avatarURL = gravatar.url(email);
-    const verificationCode = nanoid();
+    const verificationToken = nanoid();
 
     const newUser = await User.create({
       ...req.body,
       password: hashPassword,
       avatarURL,
-      verificationCode,
+      verificationToken,
     });
     const verifyEmail = {
       to: email,
       subject: "Verify email",
-      html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${verificationCode}">Click verify email</a>`,
+      html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${verificationToken}">Click verify email</a>`,
     };
 
     await sendEmail(verifyEmail);
@@ -52,17 +52,17 @@ const register = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
   try {
-    const { verificationCode } = req.params;
-    const user = await User.findOne({ verificationCode });
+    const { verificationToken } = req.params;
+    const user = await User.findOne({ verificationToken });
     if (!user) {
       throw new Error("Email or password is wrong");
-      // throw HttpError(401, "Email not found");
     }
     await User.findByIdAndUpdate(user._id, {
       verify: true,
-      verificationCode: "",
+      verificationToken: null,
     });
-    res.json({ message: "Email verify success" });
+console.log(email.verify);
+    res.json({ message: "Verification successful" });
   } catch (error) {
     res.status(res.statusCode).json({
       error: error.message,
