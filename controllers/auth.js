@@ -4,8 +4,9 @@ const gravatar = require("gravatar");
 const jimp = require("jimp");
 const path = require("path");
 const fs = require("fs/promises");
-const { HttpError } = require("../helpers");
-const { SECRET_KEY } = process.env;
+const { nanoid } = require("nanoid");
+const { HttpError, sendEmail } = require("../helpers");
+const { SECRET_KEY, BASE_URL } = process.env;
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
@@ -22,17 +23,46 @@ const register = async (req, res) => {
 
     const hashPassword = await bcrypt.hash(password, 10);
     const avatarURL = gravatar.url(email);
+    const verificationCode = nanoid();
 
     const newUser = await User.create({
       ...req.body,
       password: hashPassword,
       avatarURL,
+      verificationCode,
     });
+    const verifyEmail = {
+      to: email,
+      subject: "Verify email",
+      html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${verificationCode}">Click verify email</a>`,
+    };
+
+    await sendEmail(verifyEmail);
 
     res.status(201).json({
       email: newUser.email,
       name: newUser.name,
     });
+  } catch (error) {
+    res.status(res.statusCode).json({
+      error: error.message,
+    });
+  }
+};
+
+const verifyEmail = async (req, res) => {
+  try {
+    const { verificationCode } = req.params;
+    const user = await User.findOne({ verificationCode });
+    if (!user) {
+      throw new Error("Email or password is wrong");
+      // throw HttpError(401, "Email not found");
+    }
+    await User.findByIdAndUpdate(user._id, {
+      verify: true,
+      verificationCode: "",
+    });
+    res.json({ message: "Email verify success" });
   } catch (error) {
     res.status(res.statusCode).json({
       error: error.message,
@@ -48,6 +78,9 @@ const login = async (req, res) => {
     if (!user) {
       res.status(401);
       throw new Error("Email or password is wrong");
+    }
+    if (!user.verify) {
+      throw new Error("Email not verify");
     }
 
     const passwordCompare = await bcrypt.compare(password, user.password);
@@ -111,6 +144,7 @@ const updateAvatar = async (req, res, next) => {
 
 module.exports = {
   register,
+  verifyEmail,
   login,
   getCurrent,
   logout,

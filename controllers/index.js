@@ -4,7 +4,14 @@ const add = require("./add");
 const updateById = require("./updateById");
 const updateStatusContact = require("./updateStatusContact");
 const deleteById = require("./deleteById");
-const { register, login, getCurrent, logout, updateAvatar } = require("./auth");
+const {
+  register,
+  verifyEmail,
+  login,
+  getCurrent,
+  logout,
+  updateAvatar,
+} = require("./auth");
 
 module.exports = {
   getAll,
@@ -14,8 +21,9 @@ module.exports = {
   updateStatusContact,
   deleteById,
   register,
+  verifyEmail,
   login,
   getCurrent,
   logout,
-  updateAvatar
+  updateAvatar,
 };
