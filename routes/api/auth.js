@@ -1,6 +1,14 @@
 const express = require("express");
 const { validatePostBody, authenticate, upload } = require("../../middlewares");
-const { register, verifyEmail, login, getCurrent, logout, updateAvatar } = require("../../controllers");
+const {
+  register,
+  verifyEmail,
+  resendVerifyEmail,
+  login,
+  getCurrent,
+  logout,
+  updateAvatar,
+} = require("../../controllers");
 const { modelUserSchemas } = require("../../models");
 
 const router = express.Router();
@@ -11,7 +19,13 @@ router.post(
   register
 );
 
-router.get("/users/verify/:verificationToken", verifyEmail);
+router.get("/verify/:verificationToken", verifyEmail);
+
+router.post(
+  "/verify",
+  validatePostBody(modelUserSchemas.emailSchema),
+  resendVerifyEmail
+);
 
 router.post(
   "/users/login",

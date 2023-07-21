@@ -7,6 +7,7 @@ const deleteById = require("./deleteById");
 const {
   register,
   verifyEmail,
+  resendVerifyEmail,
   login,
   getCurrent,
   logout,
@@ -22,6 +23,7 @@ module.exports = {
   deleteById,
   register,
   verifyEmail,
+  resendVerifyEmail,
   login,
   getCurrent,
   logout,
