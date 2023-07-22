@@ -2,13 +2,12 @@ const express = require("express");
 const { validatePostBody, authenticate, upload } = require("../../middlewares");
 const {
   register,
-  verifyEmail,
-  resendVerifyEmail,
   login,
   getCurrent,
   logout,
   updateAvatar,
 } = require("../../controllers");
+const { verifyEmail, resendVerifyEmail } = require("../../services/email");
 const { modelUserSchemas } = require("../../models");
 
 const router = express.Router();

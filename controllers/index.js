@@ -6,8 +6,6 @@ const updateStatusContact = require("./updateStatusContact");
 const deleteById = require("./deleteById");
 const {
   register,
-  verifyEmail,
-  resendVerifyEmail,
   login,
   getCurrent,
   logout,
@@ -22,8 +20,6 @@ module.exports = {
   updateStatusContact,
   deleteById,
   register,
-  verifyEmail,
-  resendVerifyEmail,
   login,
   getCurrent,
   logout,

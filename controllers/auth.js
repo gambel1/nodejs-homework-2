@@ -50,45 +50,6 @@ const register = async (req, res) => {
   }
 };
 
-const verifyEmail = async (req, res) => {
-  try {
-    const { verificationToken } = req.params;
-    console.log(req.params);
-    const user = await User.findOne({ verificationToken });
-    if (!user) {
-      throw new Error("Email not found");
-    }
-    await User.findByIdAndUpdate(user._id, {
-      verify: true,
-      verificationToken: null,
-    });
-    res.json({ message: "Verification successful" });
-  } catch (error) {
-    res.status(res.statusCode).json({
-      error: error.message,
-    });
-  }
-};
-
-const resendVerifyEmail = async (req, res) => {
-  const { email } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) {
-    throw new Error("Email not found");
-  }
-  if (user.verify) {
-    throw new Error("Verification has already been passed");
-  }
-  const verifyEmail = {
-    to: email,
-    subject: "Verify email",
-    html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${user.verificationToken}">Click verify email</a>`,
-  };
-  await sendEmail(verifyEmail);
-
-  res.json({ message: "Verification email sent" });
-};
-
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -163,8 +124,6 @@ const updateAvatar = async (req, res, next) => {
 
 module.exports = {
   register,
-  verifyEmail,
-  resendVerifyEmail,
   login,
   getCurrent,
   logout,
